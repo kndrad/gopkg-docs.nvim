@@ -17,35 +17,36 @@ local lush                             = require('lush')
 local hsl                              = lush.hsl
 
 -- colors
-local primary                          = hsl(201, 100, 70) -- #38B9FF
-local primary_variant                  = hsl(201, 100, 30) -- #00659B
-local primary_light                    = hsl(201, 37, 90)  -- #DAE7EE
+local primary                          = hsl(201, 100, 70)  -- #38B9FF
+local primary_variant                  = primary.abs_da(40) -- #00659B
+local primary_light                    = hsl(201, 37, 90)   -- #DAE7EE
 
-local complementary_to_primary_variant = hsl(21, 100, 77)  -- #9B3600
+local complementary_to_primary_variant = hsl(21, 100, 77)   -- #9B3600
 
-local background                       = hsl(210, 6, 20)   -- #303336
-local foreground                       = hsl(0, 0, 95)
+local background                       = hsl(0, 0, 90)
+local foreground                       = hsl(0, 0, 10)
 local darktxt_on_background            = hsl(0, 0, 61)
 
-local overlay                          = hsl(210, 6, 34) -- #484C51
-local overlay2                         = hsl(210, 6, 45) -- #53585E
+-- local overlay                          = hsl(210, 6, 34)    -- #484C51
+local overlay                          = background.abs_li(14) -- #484C51
+local overlay2                         = hsl(210, 6, 45)       -- #53585E
 local overlay_text                     = hsl(0, 0, 100)
 local green_on_overlay                 = hsl(122, 74, 50)
-local green_on_overlay2                = hsl(122, 74, 61)
-local primary_on_overlay               = hsl(201, 100, 60)
+local green_on_overlay2                = green_on_overlay.abs_li(11)
+local primary_on_overlay               = primary.abs_li(10)
 
-local blue_below_primary               = hsl(201, 100, 30)
+local blue_below_primary               = primary_variant
 local green                            = hsl(122, 75, 50) -- #20DF26
 local blue                             = hsl(201, 88, 61)
 
 local darktxt_on_primary               = hsl(0, 0, 19)
 
 local bg_for_primarytxt                = hsl(207, 97, 13)
-local txt_on_green                     = hsl(0, 0, 19)
+local darktxt_on_green                 = hsl(0, 0, 19)
 
 
 ---@diagnostic disable: undefined-global
-local theme = lush(function(injected_functions)
+local spec = lush(function(injected_functions)
     local sym = injected_functions.sym
     return {
         Elevation { fg = overlay_text, bg = overlay },
@@ -63,27 +64,27 @@ local theme = lush(function(injected_functions)
         CursorColumn { Elevation },                                         -- Screen-column at the cursor, when 'cursorcolumn' is set.
         CursorLine { Elevation },                                           -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
         Directory { fg = foreground },                                      -- Directory names (and other special names in listings)
-        DiffChange { fg = primary, bg = bg_for_primarytxt },                -- Diff mode: Changed line |diff.txt|
-        DiffAdd { bg = complementary_to_primary_variant, fg = foreground }, -- Diff mode: Added line |diff.txt|
-        DiffDelete { bg = hsl(291, 100, 30), fg = foreground },             -- Diff mode: Deleted line |diff.txt|
-        DiffText { bg = green, fg = txt_on_green },                         -- Diff mode: Changed text within a changed line |diff.txt|
+        DiffChange { fg = primary_on_overlay },                             -- Diff mode: Changed line |diff.txt|
+        DiffAdd { bg = bg_for_primarytxt, fg = primary },                   -- Diff mode: Added line |diff.txt|
+        DiffDelete { fg = hsl(351, 100, 60) },                              -- Diff mode: Deleted line |diff.txt|
+        DiffText { bg = green, fg = darktxt_on_green },                     -- Diff mode: Changed text within a changed line |diff.txt|
         EndOfBuffer { fg = darktxt_on_background.da(15) },                  -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
-        TermCursor { bg = green, fg = txt_on_green },                       -- Cursor in a focused terminal
-        -- TermCursorNC   { }, -- Cursor in an unfocused terminal
+        TermCursor { bg = green, fg = darktxt_on_green },                   -- Cursor in a focused terminal
+        TermCursorNC { bg = TermCursor.bg.abs_da(10), fg = TermCursor.fg }, -- Cursor in an unfocused terminal
         ErrorMsg { bg = hsl(351, 69, 30) },                                 -- Error messages on the command line
         -- VertSplit      { }, -- Column separating vertically split windows
         Folded { Elevation },                                               -- Line used for closed folds
         FoldColumn { Elevation },                                           -- 'foldcolumn'
         SignColumn { Elevation },                                           -- Column where |signs| are displayed
         -- IncSearch      { }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
-        Substitute { bg = hsl(75, 100, 49), fg = hsl(32, 0, 12) },          -- |:substitute| replacement text highlighting
+        Substitute { DiffText },                                            -- |:substitute| replacement text highlighting
         LineNr { fg = darktxt_on_background, bg = background },             -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
         LineNrAbove { LineNr },                                             -- Line number for when the 'relativenumber' option is set, above the cursor line
         LineNrBelow { LineNr },                                             -- Line number for when the 'relativenumber' option is set, below the cursor line
-        CursorLineNr { fg = hsl(75, 100, 49) },                             -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+        CursorLineNr { fg = primary_light },                                -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
         -- CursorLineFold { }, -- Like FoldColumn when 'cursorline' is set for the cursor line
         -- CursorLineSign { }, -- Like SignColumn when 'cursorline' is set for the cursor line
-        MatchParen { fg = primary, bg = blue_below_primary }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+        MatchParen { bg = overlay2 }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
         -- ModeMsg        { }, -- 'showmode' message (e.g., "-- INSERT -- ")
         -- MsgArea        { }, -- Area for messages and cmdline
         -- MsgSeparator   { }, -- Separator for scrolled messages, b`msgsep` flag of 'display'
@@ -102,9 +103,9 @@ local theme = lush(function(injected_functions)
         PmenuSbar { fg = overlay_text, bg = overlay2 },       -- Popup menu: Scrollbar.
         PmenuThumb { bg = Normal.fg, fg = hsl(32, 0, 12) },   -- Popup menu: Thumb of the scrollbar.
         -- Question       { }, -- |hit-enter| prompt and yes/no questions
-        -- QuickFixLine   { }, -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-        Search { bg = hsl(81, 100, 19), fg = foreground }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
-        -- SpecialKey     { }, -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
+        QuickFixLine { DiffText },                            -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
+        Search { DiffText },                                  -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+        SpecialKey { fg = primary },                          -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
         -- SpellBad       { }, -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
         -- SpellCap       { }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
         -- SpellLocal     { }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
@@ -112,14 +113,14 @@ local theme = lush(function(injected_functions)
         StatusLine { fg = foreground, bg = primary_variant },      -- Status line of current window
         StatusLineNC { bg = primary_variant, fg = hsl(0, 0, 83) }, -- Status lines of not-current windows. Note: If this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
         TabLine { bg = overlay },                                  -- Tab pages line, not active tab page label
-        TabLineFill { bg = green, fg = txt_on_green },             -- Tab pages line, where there are no labels
+        TabLineFill { bg = green, fg = darktxt_on_green },         -- Tab pages line, where there are no labels
         -- TabLineSel     { }, -- Tab pages line, active tab page label
-        Visual { bg = overlay },                                   -- Visual mode selection
+        Visual { bg = overlay.da(20), fg = overlay_text },         -- Visual mode selection
         -- VisualNOS      { }, -- Visual mode selection when vim is "Not Owning the Selection".
         WarningMsg { fg = hsl(351, 100, 60) },                     -- Warning messages
         Whitespace { fg = darktxt_on_background },                 -- "nbsp", "space", "tab" and "trail" in 'listchars'
         Winseparator { fg = overlay },                             -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
-        WildMenu { bg = hsl(75, 100, 49), fg = hsl(32, 0, 12) },   -- Current match in 'wildmenu' completion
+        WildMenu { DiffText },                                     -- Current match in 'wildmenu' completion
         WinBar { fg = foreground, bold = true },                   -- Window bar of current window
         WinBarNC { fg = darktxt_on_background, bold = true },      -- Window bar of not-current windows
 
@@ -233,20 +234,20 @@ local theme = lush(function(injected_functions)
         --
         -- For more information see https://github.com/rktjmp/lush.nvim/issues/109
 
-        sym "@text.literal" { fg = green }, -- Comment
-        -- sym"@text.reference"    { }, -- Identifier
-        -- sym"@text.title"        { }, -- Title
+        sym "@text.literal" { Comment },      -- Comment
+        sym "@text.reference" { Identifier }, -- Identifier
+        sym "@text.title" { Title },          -- Title
         -- sym"@text.uri"          { }, -- Underlined
         -- sym"@text.underline"    { }, -- Underlined
-        sym "@text.todo" { Todo },                               -- Todo
-        sym "@comment" { fg = green },                           -- Comment
-        sym "@punctuation" { fg = foreground },                  -- Delimiter
-        sym "@constant" { fg = primary },                        -- Constant
-        sym "@constant.builtin" { fg = primary },                -- Special
-        sym "@constant.macro" { fg = primary },                  -- Define
-        sym "@define" { fg = primary },                          -- Define
-        sym "@macro" { fg = primary },                           -- Macro
-        sym "@string" { fg = complementary_to_primary_variant }, -- String
+        sym "@text.todo" { Todo },              -- Todo
+        sym "@comment" { Comment },             -- Comment
+        sym "@punctuation" { fg = foreground }, -- Delimiter
+        sym "@constant" { Constant },           -- Constant
+        sym "@constant.builtin" { Constant },   -- Special
+        sym "@constant.macro" { Constant },     -- Define
+        sym "@define" { fg = primary },         -- Define
+        sym "@macro" { fg = primary },          -- Macro
+        sym "@string" { String },               -- String
         -- sym"@string.escape"     { }, -- SpecialChar
         -- sym"@string.special"    { }, -- SpecialChar
         sym "@character" { Character },             -- Character
@@ -275,15 +276,13 @@ local theme = lush(function(injected_functions)
         sym "@type.builtin" { fg = primary },
         -- sym"@storageclass"      { }, -- StorageClass
         -- sym"@structure"         { }, -- Structure
-        -- sym"@namespace"         { }, -- Identifier
-        sym "@include" { fg = primary }, -- Include
-        sym "@preproc" { fg = primary }, -- PreProc
+        sym "@namespace" { fg = primary_light }, -- Identifier
+        sym "@include" { fg = primary },         -- Include
+        sym "@preproc" { fg = primary },         -- PreProc
         -- sym"@debug"             { }, -- Debug
         -- sym"@tag"               { }, -- Tag
     }
 end)
 
 -- Return our parsed theme for extension or use elsewhere.
-return theme
-
--- vi:nowrap
+return spec
