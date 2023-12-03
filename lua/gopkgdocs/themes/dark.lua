@@ -52,60 +52,60 @@ local spec = lush(function(injected_functions)
         Elevation { fg = overlay_text, bg = overlay },
         SecondElevation = { fg = overlay_text, bg = overlay2 },
 
-        String { fg = complementary_to_primary_variant },            --   A string constant: "this is a string"
-        Normal { fg = foreground, bg = background },                 -- Normal text
-        ColorColumn { bg = primary_variant, fg = overlay_text },     -- Columns set with 'colorcolumn'
-        Conceal { bg = darktxt_on_background, fg = hsl(32, 0, 12) }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
-        Title { fg = primary },                                      -- Titles for output from ":set all", ":autocmd" etc.
-        Cursor { fg = overlay_text, bg = overlay },                  -- Character under the cursor
-        CurSearch { bg = primary_variant },                          -- Highlighting a search pattern under the cursor (see 'hlsearch')
-        -- lCursor        { }, -- Character under the cursor when |language-mapping| is used (see 'guicursor')
-        -- CursorIM       { }, -- Like Cursor, but used when in IME mode |CursorIM|
+        String { fg = complementary_to_primary_variant },                   --   A string constant: "this is a string"
+        Normal { fg = foreground, bg = background },                        -- Normal text
+        ColorColumn { bg = primary_variant, fg = overlay_text },            -- Columns set with 'colorcolumn'
+        Conceal { bg = darktxt_on_background, fg = hsl(32, 0, 12) },        -- Placeholder characters substituted for concealed text (see 'conceallevel')
+        Title { fg = primary },                                             -- Titles for output from ":set all", ":autocmd" etc.
+        Cursor { fg = overlay_text, bg = overlay },                         -- Character under the cursor
+        CurSearch { bg = primary_variant },                                 -- Highlighting a search pattern under the cursor (see 'hlsearch')
+        lCursor { fg = foreground },                                        -- Character under the cursor when |language-mapping| is used (see 'guicursor')
+        CursorIM { fg = foreground },                                       -- Like Cursor, but used when in IME mode |CursorIM|
         CursorColumn { Elevation },                                         -- Screen-column at the cursor, when 'cursorcolumn' is set.
         CursorLine { Elevation },                                           -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
         Directory { fg = foreground },                                      -- Directory names (and other special names in listings)
         DiffChange { fg = primary_on_overlay },                             -- Diff mode: Changed line |diff.txt|
         DiffAdd { bg = bg_for_primarytxt, fg = primary },                   -- Diff mode: Added line |diff.txt|
         DiffDelete { fg = hsl(351, 100, 60) },                              -- Diff mode: Deleted line |diff.txt|
-        DiffText { bg = green, fg = darktxt_on_green },                     -- Diff mode: Changed text within a changed line |diff.txt|
+        DiffText { Normal },                                                -- Diff mode: Changed text within a changed line |diff.txt|
         EndOfBuffer { fg = darktxt_on_background.da(15) },                  -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
-        TermCursor { bg = green, fg = darktxt_on_green },                   -- Cursor in a focused terminal
+        TermCursor { fg = overlay_text, bg = overlay2 },                    -- Cursor in a focused terminal
         TermCursorNC { bg = TermCursor.bg.abs_da(10), fg = TermCursor.fg }, -- Cursor in an unfocused terminal
         ErrorMsg { bg = hsl(351, 69, 30) },                                 -- Error messages on the command line
-        -- VertSplit      { }, -- Column separating vertically split windows
+        VertSplit { fg = foreground },                                      -- Column separating vertically split windows
         Folded { Elevation },                                               -- Line used for closed folds
         FoldColumn { Elevation },                                           -- 'foldcolumn'
         SignColumn { Elevation },                                           -- Column where |signs| are displayed
-        -- IncSearch      { }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+        IncSearch { DiffText },                                             -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
         Substitute { DiffText },                                            -- |:substitute| replacement text highlighting
         LineNr { fg = darktxt_on_background, bg = background },             -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
         LineNrAbove { LineNr },                                             -- Line number for when the 'relativenumber' option is set, above the cursor line
         LineNrBelow { LineNr },                                             -- Line number for when the 'relativenumber' option is set, below the cursor line
         CursorLineNr { fg = primary_light },                                -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-        -- CursorLineFold { }, -- Like FoldColumn when 'cursorline' is set for the cursor line
-        -- CursorLineSign { }, -- Like SignColumn when 'cursorline' is set for the cursor line
-        MatchParen { bg = overlay2 }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
-        -- ModeMsg        { }, -- 'showmode' message (e.g., "-- INSERT -- ")
-        -- MsgArea        { }, -- Area for messages and cmdline
-        -- MsgSeparator   { }, -- Separator for scrolled messages, b`msgsep` flag of 'display'
-        MoreMsg { fg = foreground, bold = true }, -- |more-prompt|
-        NonText { fg = primary },                 -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-        NormalFloat { Elevation },                -- Normal text in floating windows.
-        FloatBorder { fg = overlay },             -- Border of floating windows.
-        -- FloatTitle     { }, -- Title of floating windows.
-        -- NormalNC {  },    -- normal text in non-current windows
-        Pmenu { fg = foreground.da(30), bg = overlay },       -- Popup menu: Normal item.
-        PmenuSel { fg = overlay_text, bg = primary_variant }, -- Popup menu: Selected item.
-        PmenuKind { Pmenu },                                  -- Popup menu: Normal item "kind"
-        PmenuKindSel { PmenuSel },                            -- Popup menu: Selected item "kind"
-        PmenuExtra { Pmenu },                                 -- Popup menu: Normal item "extra text"
-        PmenuExtraSel { PmenuSel },                           -- Popup menu: Selected item "extra text"
-        PmenuSbar { fg = overlay_text, bg = overlay2 },       -- Popup menu: Scrollbar.
-        PmenuThumb { bg = Normal.fg, fg = hsl(32, 0, 12) },   -- Popup menu: Thumb of the scrollbar.
-        -- Question       { }, -- |hit-enter| prompt and yes/no questions
-        QuickFixLine { DiffText },                            -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-        Search { DiffText },                                  -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
-        SpecialKey { fg = primary },                          -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
+        CursorLineFold { Folded },                                          -- Like FoldColumn when 'cursorline' is set for the cursor line
+        CursorLineSign { Folded },                                          -- Like SignColumn when 'cursorline' is set for the cursor line
+        MatchParen { bg = overlay2 },                                       -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+        ModeMsg { fg = primary, bold = true },                              -- 'showmode' message (e.g., "-- INSERT -- ")
+        MsgArea { fg = foreground },                                        -- Area for messages and cmdline
+        MsgSeparator { CurSearch },                                         -- Separator for scrolled messages, b`msgsep` flag of 'display'
+        MoreMsg { fg = foreground, bold = true },                           -- |more-prompt|
+        NonText { fg = primary },                                           -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
+        NormalFloat { Elevation },                                          -- Normal text in floating windows.
+        FloatBorder { fg = overlay },                                       -- Border of floating windows.
+        FloatTitle { Title },                                               -- Title of floating windows.
+        NormalNC { fg = foreground.da(20) },                                -- normal text in non-current windows
+        Pmenu { fg = foreground.da(30), bg = overlay },                     -- Popup menu: Normal item.
+        PmenuSel { fg = overlay_text, bg = primary_variant },               -- Popup menu: Selected item.
+        PmenuKind { Pmenu },                                                -- Popup menu: Normal item "kind"
+        PmenuKindSel { PmenuSel },                                          -- Popup menu: Selected item "kind"
+        PmenuExtra { Pmenu },                                               -- Popup menu: Normal item "extra text"
+        PmenuExtraSel { PmenuSel },                                         -- Popup menu: Selected item "extra text"
+        PmenuSbar { fg = overlay_text, bg = overlay2 },                     -- Popup menu: Scrollbar.
+        PmenuThumb { bg = Normal.fg, fg = hsl(32, 0, 12) },                 -- Popup menu: Thumb of the scrollbar.
+        Question { fg = foreground, bold = true },                          -- |hit-enter| prompt and yes/no questions
+        QuickFixLine { DiffText },                                          -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
+        Search { DiffText },                                                -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+        SpecialKey { fg = primary },                                        -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
         -- SpellBad       { }, -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
         -- SpellCap       { }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
         -- SpellLocal     { }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
@@ -114,9 +114,9 @@ local spec = lush(function(injected_functions)
         StatusLineNC { bg = primary_variant, fg = hsl(0, 0, 83) }, -- Status lines of not-current windows. Note: If this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
         TabLine { bg = overlay },                                  -- Tab pages line, not active tab page label
         TabLineFill { bg = green, fg = darktxt_on_green },         -- Tab pages line, where there are no labels
-        -- TabLineSel     { }, -- Tab pages line, active tab page label
+        TabLineSel { fg = foreground, bold = true },               -- Tab pages line, active tab page label
         Visual { bg = overlay.da(20), fg = overlay_text },         -- Visual mode selection
-        -- VisualNOS      { }, -- Visual mode selection when vim is "Not Owning the Selection".
+        VisualNOS { fg = foreground.da(20) },                      -- Visual mode selection when vim is "Not Owning the Selection".
         WarningMsg { fg = hsl(351, 100, 60) },                     -- Warning messages
         Whitespace { fg = darktxt_on_background },                 -- "nbsp", "space", "tab" and "trail" in 'listchars'
         Winseparator { fg = overlay },                             -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
