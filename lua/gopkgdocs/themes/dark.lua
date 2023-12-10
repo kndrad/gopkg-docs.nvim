@@ -280,7 +280,7 @@ local spec = lush(function(injected_functions)
         sym "@include" { fg = primary },         -- Include
         sym "@preproc" { fg = primary },         -- PreProc
         -- sym"@debug"             { }, -- Debug
-        -- sym"@tag"               { }, -- Tag
+        sym "@tag" { fg = primary_light },       -- Tag
     }
 end)
 
